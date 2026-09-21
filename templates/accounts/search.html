@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Search &middot; 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--search">
+  <header class="page__head">
+    <h1>Search</h1>
+    <p class="page__sub">Find people by handle, name or bio.</p>
+  </header>
+
+  <form class="searchbar" data-search action="{% url 'accounts:search' %}" method="get" role="search">
+    <svg class="icon searchbar__icon" viewBox="0 0 24 24"><use href="#i-search"/></svg>
+    <input type="search" name="q" value="{{ query }}" autocomplete="off" autofocus
+           placeholder="Start typing a name" aria-label="Search people" data-search-input>
+    <button type="button" class="icon-btn icon-btn--sm searchbar__clear" data-search-clear
+            aria-label="Clear search" {% if not query %}hidden{% endif %}>
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-close"/></svg>
+    </button>
+    <span class="searchbar__spinner spinner" data-search-spinner aria-hidden="true"></span>
+  </form>
+
+  <div class="results" data-search-results aria-live="polite">
+    {% include 'partials/_search_results.html' %}
+  </div>
+</div>
+{% endblock %}
+
+{% block rail %}
+  <section class="rail-card">
+    <h2 class="rail-card__title">Tips</h2>
+    <ul class="tips">
+      <li>Press <kbd>/</kbd> anywhere to jump into search.</li>
+      <li>Use <kbd>&uarr;</kbd> <kbd>&darr;</kbd> to move through results, <kbd>Enter</kbd> to open.</li>
+      <li><kbd>Esc</kbd> clears what you've typed.</li>
+    </ul>
+  </section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Activity &middot; 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--notes">
+  <header class="page__head page__head--split">
+    <div><h1>Activity</h1><p class="page__sub">Likes, comments and new followers.</p></div>
+    {% if unread_count %}
+      <button type="button" class="btn btn--ghost btn--sm" data-mark-read="{% url 'notifications:mark_read' %}">
+        Mark all read
+      </button>
+    {% endif %}
+  </header>
+
+  <div class="card notes" data-notes>
+    {% include 'partials/_notification_list.html' %}
+  </div>
+</div>
+{% endblock %}

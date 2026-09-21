@@ -1,0 +1,21 @@
+{% load humanize %}
+{% for n in notifications %}
+<a class="note {% if not n.is_read %}is-unread{% endif %}"
+   href="{% if n.post %}{% url 'posts:detail' n.post.pk %}{% else %}{% url 'accounts:profile' n.actor.username %}{% endif %}">
+  <span class="note__mark note__mark--{{ n.verb }}" aria-hidden="true">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-{% if n.verb == 'like' %}heart{% elif n.verb == 'comment' %}comment{% else %}user{% endif %}"/></svg>
+  </span>
+  {% include 'partials/_avatar.html' with profile=n.actor.profile size='sm' %}
+  <span class="note__text">
+    <strong>{{ n.actor.profile.name }}</strong> {{ n.get_verb_display }}{% if n.comment %}: <em>{{ n.comment.body|truncatechars:60 }}</em>{% endif %}
+    <time datetime="{{ n.created_at|date:'c' }}">{{ n.created_at|naturaltime }}</time>
+  </span>
+  {% if n.post.image %}<img class="note__thumb" src="{{ n.post.image.url }}" alt="" loading="lazy">{% endif %}
+</a>
+{% empty %}
+<div class="empty">
+  <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-bell"/></svg>
+  <h3>Nothing yet</h3>
+  <p>Likes, comments and new followers land here.</p>
+</div>
+{% endfor %}

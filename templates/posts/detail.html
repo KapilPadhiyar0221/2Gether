@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.author.profile.name }} on 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--detail">
+  <header class="page__head page__head--back">
+    <a class="icon-btn" href="{% url 'posts:home' %}" aria-label="Back to feed">
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-back"/></svg>
+    </a>
+    <h1>Post</h1>
+  </header>
+
+  <div class="feed" data-feed>
+    {% include 'partials/_post.html' %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+  // Open this post's thread straight away — it's why you followed the link.
+  document.querySelector('[data-comments-toggle]')?.click();
+</script>
+{% endblock %}

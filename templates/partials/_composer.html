@@ -1,0 +1,37 @@
+{% comment %}Shared composer body. `variant` = inline | modal {% endcomment %}
+<form class="composer composer--{{ variant|default:'inline' }}" data-composer
+      action="{% url 'posts:create' %}" method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  <div class="composer__top">
+    {% include 'partials/_avatar.html' with profile=user.profile size='md' %}
+    <label class="sr-only" for="composer-body-{{ variant|default:'inline' }}">What's on your mind</label>
+    <textarea id="composer-body-{{ variant|default:'inline' }}" name="body" rows="1" maxlength="1000"
+      class="composer__input" data-autogrow data-composer-body
+      placeholder="{{ placeholder|default:'Say something worth gathering around' }}"></textarea>
+  </div>
+
+  <div class="composer__preview is-empty" data-composer-preview hidden>
+    <img alt="Selected image preview" data-composer-preview-img>
+    <button type="button" class="preview__remove" data-composer-clear aria-label="Remove image">
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-close"/></svg>
+    </button>
+  </div>
+
+  <p class="composer__error" data-composer-error role="alert" hidden></p>
+
+  <div class="composer__bar">
+    <label class="icon-btn icon-btn--label" title="Add an image">
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-image"/></svg>
+      <span class="sr-only">Add an image</span>
+      <input type="file" name="image" accept="image/png,image/jpeg,image/webp,image/gif" data-composer-file class="sr-only">
+    </label>
+    <span class="counter" data-counter aria-hidden="true">
+      <svg viewBox="0 0 24 24" class="counter__ring"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="9" data-counter-arc/></svg>
+      <em data-counter-text></em>
+    </span>
+    <button type="submit" class="btn btn--primary" data-composer-submit disabled>
+      <span class="btn__label">Post</span>
+      <span class="spinner" aria-hidden="true"></span>
+    </button>
+  </div>
+</form>

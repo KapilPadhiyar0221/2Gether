@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Explore &middot; 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--feed">
+  <header class="page__head">
+    <h1>Explore</h1>
+    <p class="page__sub">Everything on 2gether, newest first.</p>
+  </header>
+
+  <div class="feed" data-feed>
+    {% if posts %}
+      {% include 'partials/_feed_page.html' %}
+    {% else %}
+      <div class="empty empty--lg">
+        <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-explore"/></svg>
+        <h3>Nothing's been posted yet</h3>
+        <p>You're early. Put something here and the rest will follow.</p>
+        <button type="button" class="btn btn--primary" data-open-composer>Write the first post</button>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if posts %}{% include 'partials/_load_more.html' %}{% endif %}
+</div>
+{% endblock %}
+
+{% block rail %}{% include 'partials/_rail_suggestions.html' %}{% endblock %}

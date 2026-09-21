@@ -1,0 +1,47 @@
+<nav class="sidebar" aria-label="Main">
+  <div class="sidebar__inner">
+    {% include 'partials/_wordmark.html' %}
+
+    <ul class="nav">
+      <li><a class="nav__item {% if active_nav == 'home' %}is-active{% endif %}" href="{% url 'posts:home' %}" {% if active_nav == 'home' %}aria-current="page"{% endif %}>
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-home"/></svg><span>Feed</span></a></li>
+      <li><a class="nav__item {% if active_nav == 'explore' %}is-active{% endif %}" href="{% url 'posts:explore' %}" {% if active_nav == 'explore' %}aria-current="page"{% endif %}>
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-explore"/></svg><span>Explore</span></a></li>
+      <li><a class="nav__item {% if active_nav == 'search' %}is-active{% endif %}" href="{% url 'accounts:search' %}" {% if active_nav == 'search' %}aria-current="page"{% endif %}>
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-search"/></svg><span>Search</span></a></li>
+      <li><a class="nav__item {% if active_nav == 'notifications' %}is-active{% endif %}" href="{% url 'notifications:inbox' %}" data-notif-link {% if active_nav == 'notifications' %}aria-current="page"{% endif %}>
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-bell"/></svg><span>Activity</span>
+        <em class="badge {% if not unread_count %}is-hidden{% endif %}" data-notif-badge>{{ unread_count }}</em></a></li>
+      <li><a class="nav__item {% if active_nav == 'profile' %}is-active{% endif %}" href="{% url 'accounts:profile' user.username %}" {% if active_nav == 'profile' %}aria-current="page"{% endif %}>
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-user"/></svg><span>Profile</span></a></li>
+    </ul>
+
+    <button type="button" class="btn btn--primary btn--block" data-open-composer>
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-plus"/></svg><span>New post</span>
+    </button>
+
+    <div class="sidebar__foot">
+      <a class="who" href="{% url 'accounts:profile' user.username %}">
+        {% include 'partials/_avatar.html' with profile=user.profile size='sm' %}
+        <span class="who__text">
+          <strong>{{ user.profile.name }}</strong>
+          <small>&#64;{{ user.username }}</small>
+        </span>
+      </a>
+      <div class="sidebar__tools">
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Switch to dark theme" title="Theme">
+          <svg class="icon icon--sun" viewBox="0 0 24 24"><use href="#i-sun"/></svg>
+          <svg class="icon icon--moon" viewBox="0 0 24 24"><use href="#i-moon"/></svg>
+        </button>
+        <a class="icon-btn" href="{% url 'accounts:edit_profile' %}" aria-label="Edit profile" title="Edit profile">
+          <svg class="icon" viewBox="0 0 24 24"><use href="#i-settings"/></svg>
+        </a>
+        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+          <button class="icon-btn" type="submit" aria-label="Sign out" title="Sign out">
+            <svg class="icon" viewBox="0 0 24 24"><use href="#i-logout"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>

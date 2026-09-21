@@ -1,0 +1,22 @@
+<section class="rail-card">
+  <h2 class="rail-card__title">People to follow</h2>
+  {% if suggestions %}
+    <div class="rail-people">
+      {% for person_item in suggestions %}
+      <div class="rail-person" data-person="{{ person_item.username }}">
+        <a href="{% url 'accounts:profile' person_item.username %}" class="rail-person__link">
+          {% include 'partials/_avatar.html' with profile=person_item.profile size='sm' %}
+          <span>
+            <strong>{{ person_item.profile.name }}</strong>
+            <small>{{ person_item.followers_total }} follower{{ person_item.followers_total|pluralize }}</small>
+          </span>
+        </a>
+        {% include 'partials/_follow_button.html' with target=person_item %}
+      </div>
+      {% endfor %}
+    </div>
+    <a class="rail-card__more" href="{% url 'accounts:search' %}">Search everyone</a>
+  {% else %}
+    <p class="rail-card__blank">You're following everyone here. Invite someone new.</p>
+  {% endif %}
+</section>

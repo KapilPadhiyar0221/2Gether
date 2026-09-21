@@ -1,0 +1,13 @@
+<header class="topbar" data-topbar>
+  {% include 'partials/_wordmark.html' %}
+  <div class="topbar__actions">
+    <button type="button" class="icon-btn" data-theme-toggle aria-label="Switch theme">
+      <svg class="icon icon--sun" viewBox="0 0 24 24"><use href="#i-sun"/></svg>
+      <svg class="icon icon--moon" viewBox="0 0 24 24"><use href="#i-moon"/></svg>
+    </button>
+    <a class="icon-btn" href="{% url 'notifications:inbox' %}" aria-label="Activity" data-notif-link>
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-bell"/></svg>
+      <em class="badge badge--dot {% if not unread_count %}is-hidden{% endif %}" data-notif-badge>{{ unread_count }}</em>
+    </a>
+  </div>
+</header>

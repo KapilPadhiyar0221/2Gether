@@ -1,0 +1,76 @@
+{% load humanize %}
+<article class="post" data-post="{{ post.pk }}" tabindex="-1">
+  <header class="post__head">
+    <a class="post__author" href="{% url 'accounts:profile' post.author.username %}">
+      {% include 'partials/_avatar.html' with profile=post.author.profile size='md' %}
+      <span class="post__names">
+        <strong>{{ post.author.profile.name }}</strong>
+        <small>&#64;{{ post.author.username }}</small>
+      </span>
+    </a>
+    <div class="post__meta">
+      <time datetime="{{ post.created_at|date:'c' }}" title="{{ post.created_at|date:'j M Y, H:i' }}">{{ post.created_at|naturaltime }}</time>
+      {% if post.author_id == user.id %}
+      <div class="menu" data-menu>
+        <button type="button" class="icon-btn icon-btn--sm" data-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Post options">
+          <svg class="icon" viewBox="0 0 24 24"><use href="#i-more"/></svg>
+        </button>
+        <div class="menu__list" role="menu" hidden>
+          <button type="button" class="menu__item menu__item--danger" role="menuitem"
+                  data-delete-post="{% url 'posts:delete' post.pk %}">
+            <svg class="icon" viewBox="0 0 24 24"><use href="#i-trash"/></svg>Delete post
+          </button>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if post.body %}<div class="post__body">{{ post.body|linebreaksbr|urlize }}</div>{% endif %}
+
+  {% if post.image %}
+  <figure class="post__media"{% if post.aspect_ratio %} style="--ratio: {{ post.aspect_ratio }}"{% endif %}>
+    <img src="{{ post.image.url }}" alt="Image shared by {{ post.author.profile.name }}"
+         loading="lazy" decoding="async" data-reveal
+         {% if post.image_width %}width="{{ post.image_width }}" height="{{ post.image_height }}"{% endif %}>
+  </figure>
+  {% endif %}
+
+  <footer class="post__actions">
+    <button type="button" class="action action--like {% if post.liked %}is-on{% endif %}"
+            data-like="{% url 'posts:like' post.pk %}" data-raw="{{ post.like_total }}"
+            aria-pressed="{% if post.liked %}true{% else %}false{% endif %}">
+      <span class="action__icon">
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-heart"/></svg>
+        <span class="spark" aria-hidden="true"></span>
+      </span>
+      <span class="action__count" data-like-count>{{ post.like_total }}</span>
+      <span class="sr-only">likes</span>
+    </button>
+
+    <button type="button" class="action action--comment" data-comments-toggle
+            data-comments-url="{% url 'posts:comments' post.pk %}"
+            aria-expanded="false" aria-controls="thread-{{ post.pk }}">
+      <span class="action__icon"><svg class="icon" viewBox="0 0 24 24"><use href="#i-comment"/></svg></span>
+      <span class="action__count" data-comment-count>{{ post.comment_total }}</span>
+      <span class="sr-only">comments</span>
+    </button>
+
+    <button type="button" class="action action--share" data-share="{% url 'posts:detail' post.pk %}"
+            aria-label="Copy link to this post">
+      <span class="action__icon"><svg class="icon" viewBox="0 0 24 24"><use href="#i-share"/></svg></span>
+    </button>
+  </footer>
+
+  <section class="thread" id="thread-{{ post.pk }}" data-thread hidden>
+    <div class="thread__list" data-thread-list>
+      {% include 'partials/_skeleton_comments.html' %}
+    </div>
+    <form class="reply" data-reply action="{% url 'posts:add_comment' post.pk %}" method="post">
+      {% csrf_token %}
+      {% include 'partials/_avatar.html' with profile=user.profile size='xs' %}
+      <input type="text" name="body" maxlength="500" placeholder="Add a comment" aria-label="Add a comment" data-reply-input>
+      <button type="submit" class="btn btn--ghost btn--sm" data-reply-submit disabled>Reply</button>
+    </form>
+  </section>
+</article>

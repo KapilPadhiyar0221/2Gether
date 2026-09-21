@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} &middot; 2gether{% endblock %}
+{% block content %}
+<div class="page page--error">
+  <div class="empty empty--lg">
+    <p class="error-code">{{ code }}</p>
+    <h3>{{ title }}</h3>
+    <p>{{ detail }}</p>
+    <a class="btn btn--primary" href="{% url 'posts:home' %}">Back to your feed</a>
+  </div>
+</div>
+{% endblock %}
+{% block guest_content %}
+<div class="auth"><div class="auth__panel">
+  <p class="error-code">{{ code }}</p><h1>{{ title }}</h1><p class="auth__sub">{{ detail }}</p>
+  <a class="btn btn--primary btn--block" href="{% url 'accounts:login' %}">Sign in</a>
+</div></div>
+{% endblock %}

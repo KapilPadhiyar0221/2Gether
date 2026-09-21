@@ -1,0 +1,18 @@
+{% if not query %}
+  <div class="empty">
+    <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-search"/></svg>
+    <h3>Find your people</h3>
+    <p>Search by handle, name or something from a bio.</p>
+  </div>
+{% elif results %}
+  <p class="results__count">{{ results|length }} {{ results|length|pluralize:"person,people" }} matching &ldquo;{{ query }}&rdquo;</p>
+  <div class="people-list">
+    {% for person_item in results %}{% include 'partials/_person_row.html' %}{% endfor %}
+  </div>
+{% else %}
+  <div class="empty">
+    <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-users"/></svg>
+    <h3>Nobody here by that name</h3>
+    <p>No one matches &ldquo;{{ query }}&rdquo;. Try a shorter word, or check the spelling.</p>
+  </div>
+{% endif %}

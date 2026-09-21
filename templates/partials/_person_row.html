@@ -1,0 +1,13 @@
+<div class="person" data-person="{{ person_item.username }}">
+  <a class="person__link" href="{% url 'accounts:profile' person_item.username %}">
+    {% include 'partials/_avatar.html' with profile=person_item.profile size='md' %}
+    <span class="person__text">
+      <strong>{{ person_item.profile.name }}</strong>
+      <small>&#64;{{ person_item.username }}</small>
+      {% if person_item.profile.bio %}<span class="person__bio">{{ person_item.profile.bio }}</span>{% endif %}
+    </span>
+  </a>
+  {% if person_item.id != user.id %}
+    {% include 'partials/_follow_button.html' with target=person_item %}
+  {% endif %}
+</div>

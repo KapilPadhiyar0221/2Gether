@@ -1,0 +1,7 @@
+<button type="button"
+        class="btn btn--sm follow {% if target.is_followed %}is-following{% endif %}"
+        data-follow="{% url 'accounts:follow' target.username %}"
+        data-username="{{ target.username }}"
+        aria-pressed="{% if target.is_followed %}true{% else %}false{% endif %}">
+  <span class="follow__label">{% if target.is_followed %}Following{% else %}Follow{% endif %}</span>
+</button>

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Edit profile &middot; 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--form">
+  <header class="page__head page__head--back">
+    <a class="icon-btn" href="{% url 'accounts:profile' user.username %}" aria-label="Back to profile">
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-back"/></svg>
+    </a>
+    <div><h1>Edit profile</h1><p class="page__sub">This is what people see when they find you.</p></div>
+  </header>
+
+  <form class="card form" method="post" enctype="multipart/form-data" novalidate data-validate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="alert alert--error">{{ form.non_field_errors }}</div>{% endif %}
+
+    <div class="avatar-field">
+      <div class="avatar-field__preview">
+        {% include 'partials/_avatar.html' with profile=user.profile size='xl' %}
+        <img class="avatar-field__new" data-avatar-preview alt="" hidden>
+      </div>
+      <div class="avatar-field__controls">
+        <label class="btn btn--outline btn--sm">
+          <svg class="icon" viewBox="0 0 24 24"><use href="#i-image"/></svg>
+          Choose photo
+          <input type="file" name="avatar" accept="image/*" data-avatar-input class="sr-only">
+        </label>
+        {% if user.profile.avatar %}
+          <label class="checkbox">{{ form.remove_avatar }}<span>Remove current photo</span></label>
+        {% endif %}
+        <p class="field__hint">Square images work best. Up to 5 MB.</p>
+        {% for e in form.avatar.errors %}<p class="field__error">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    {% for field in form %}
+      {% if field.name != 'avatar' and field.name != 'remove_avatar' %}
+      <div class="field {% if field.errors %}has-error{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.name == 'bio' %}<p class="field__hint" data-bio-count>{{ field.value|default:''|length }}/180</p>{% endif %}
+        {% for e in field.errors %}<p class="field__error">{{ e }}</p>{% endfor %}
+      </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="form__actions">
+      <a class="btn btn--ghost" href="{% url 'accounts:profile' user.username %}">Cancel</a>
+      <button type="submit" class="btn btn--primary">Save changes</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

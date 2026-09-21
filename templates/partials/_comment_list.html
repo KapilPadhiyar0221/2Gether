@@ -1,0 +1,5 @@
+{% for comment in comments %}
+  {% include 'partials/_comment.html' %}
+{% empty %}
+  <p class="thread__empty">No comments yet. Start the conversation.</p>
+{% endfor %}

@@ -1,0 +1,7 @@
+<span class="avatar avatar--{{ size|default:'md' }}">
+  {% if profile.avatar %}
+    <img src="{{ profile.avatar.url }}" alt="{{ profile.name }}" loading="lazy" decoding="async" width="96" height="96">
+  {% else %}
+    <span class="avatar__initials" aria-hidden="true">{{ profile.initials }}</span>
+  {% endif %}
+</span>

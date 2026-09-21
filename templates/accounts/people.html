@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}{{ heading }} &middot; &#64;{{ person.username }}{% endblock %}
+
+{% block content %}
+<div class="page page--people">
+  <header class="page__head page__head--back">
+    <a class="icon-btn" href="{% url 'accounts:profile' person.username %}" aria-label="Back to profile">
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-back"/></svg>
+    </a>
+    <div>
+      <h1>{{ heading }}</h1>
+      <p class="page__sub">&#64;{{ person.username }}</p>
+    </div>
+  </header>
+
+  <nav class="segmented" aria-label="Followers and following">
+    <a class="segmented__item {% if mode == 'followers' %}is-active{% endif %}" href="{% url 'accounts:followers' person.username %}">Followers</a>
+    <a class="segmented__item {% if mode == 'following' %}is-active{% endif %}" href="{% url 'accounts:following' person.username %}">Following</a>
+  </nav>
+
+  {% if people %}
+    <div class="people-list card">
+      {% for person_item in people %}{% include 'partials/_person_row.html' %}{% endfor %}
+    </div>
+  {% else %}
+    <div class="empty empty--lg">
+      <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-users"/></svg>
+      <h3>{{ blank_message }}</h3>
+      <p>Explore is a good place to start.</p>
+      <a class="btn btn--primary" href="{% url 'posts:explore' %}">Go to Explore</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

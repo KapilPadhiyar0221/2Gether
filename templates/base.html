@@ -1,0 +1,66 @@
+{% load static %}<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}2gether{% endblock %}</title>
+<meta name="description" content="2gether — a small, quiet social network for people you actually know.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ECEFEA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1512" media="(prefers-color-scheme: dark)">
+
+{# Theme is applied before first paint so there is never a flash of the wrong surface. #}
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('2gether:theme');
+    var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', saved || system);
+    document.documentElement.classList.add('js');
+  } catch (e) {}
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/layout.css' %}">
+<link rel="stylesheet" href="{% static 'css/components.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+</head>
+
+<body class="{% block body_class %}{% endblock %}" data-nav="{{ active_nav|default:'' }}">
+{% include 'partials/_icons.html' %}
+<form id="csrf-holder" hidden>{% csrf_token %}</form>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+{% if user.is_authenticated %}
+  {% include 'partials/_topbar.html' %}
+  <div class="shell">
+    {% include 'partials/_sidebar.html' %}
+    <main class="shell__main" id="main">{% block content %}{% endblock %}</main>
+    <aside class="shell__rail">{% block rail %}{% endblock %}</aside>
+  </div>
+  {% include 'partials/_mobilenav.html' %}
+  {% include 'partials/_composer_modal.html' %}
+{% else %}
+  <main id="main" class="bare">{% block guest_content %}{% endblock %}</main>
+{% endif %}
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+{% if messages %}
+<script id="server-messages" type="application/json">
+[{% for m in messages %}{"text": "{{ m|escapejs }}", "kind": "{{ m.tags|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]
+</script>
+{% endif %}
+
+<script type="module" src="{% static 'js/main.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

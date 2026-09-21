@@ -1,0 +1,19 @@
+{% load humanize %}
+<div class="comment" data-comment="{{ comment.pk }}">
+  <a href="{% url 'accounts:profile' comment.author.username %}" class="comment__avatar">
+    {% include 'partials/_avatar.html' with profile=comment.author.profile size='xs' %}
+  </a>
+  <div class="comment__bubble">
+    <div class="comment__meta">
+      <a href="{% url 'accounts:profile' comment.author.username %}"><strong>{{ comment.author.profile.name }}</strong></a>
+      <time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|naturaltime }}</time>
+    </div>
+    <p>{{ comment.body|linebreaksbr }}</p>
+  </div>
+  {% if comment.author_id == user.id or post.author_id == user.id %}
+  <button type="button" class="icon-btn icon-btn--sm comment__delete"
+          data-delete-comment="{% url 'posts:delete_comment' comment.pk %}" aria-label="Delete comment">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-trash"/></svg>
+  </button>
+  {% endif %}
+</div>

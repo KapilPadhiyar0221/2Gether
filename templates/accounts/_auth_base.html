@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block guest_content %}
+<div class="auth">
+  <section class="auth__stage" aria-hidden="true">
+    <div class="auth__brand">{% include 'partials/_wordmark.html' %}</div>
+    <div class="orbit">
+      <span class="orbit__ring orbit__ring--1"></span>
+      <span class="orbit__ring orbit__ring--2"></span>
+      <span class="orbit__ring orbit__ring--3"></span>
+      <span class="orbit__dot orbit__dot--a"></span>
+      <span class="orbit__dot orbit__dot--b"></span>
+      <span class="orbit__dot orbit__dot--c"></span>
+    </div>
+    <blockquote class="auth__line">
+      <p>Two circles overlap. That overlap is the whole idea.</p>
+    </blockquote>
+  </section>
+
+  <section class="auth__panel">
+    <div class="auth__panel-inner">
+      <div class="auth__mobile-brand">{% include 'partials/_wordmark.html' %}</div>
+      <h1>{% block auth_title %}{% endblock %}</h1>
+      <p class="auth__sub">{% block auth_sub %}{% endblock %}</p>
+
+      <form method="post" class="form form--auth" novalidate data-validate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert--error" role="alert">
+            {% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}
+          </div>
+        {% endif %}
+
+        {% for field in form %}
+        <div class="field {% if field.errors %}has-error{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="field__hint">{{ field.help_text|safe }}</p>{% endif %}
+          {% for e in field.errors %}<p class="field__error">{{ e }}</p>{% endfor %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn--primary btn--block">
+          <span class="btn__label">{% block auth_cta %}Continue{% endblock %}</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <p class="auth__switch">{% block auth_switch %}{% endblock %}</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

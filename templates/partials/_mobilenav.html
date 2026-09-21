@@ -1,0 +1,12 @@
+<nav class="tabbar" aria-label="Main">
+  <a class="tabbar__item {% if active_nav == 'home' %}is-active{% endif %}" href="{% url 'posts:home' %}">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-home"/></svg><span>Feed</span></a>
+  <a class="tabbar__item {% if active_nav == 'explore' %}is-active{% endif %}" href="{% url 'posts:explore' %}">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-explore"/></svg><span>Explore</span></a>
+  <button type="button" class="tabbar__compose" data-open-composer aria-label="New post">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>
+  <a class="tabbar__item {% if active_nav == 'search' %}is-active{% endif %}" href="{% url 'accounts:search' %}">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-search"/></svg><span>Search</span></a>
+  <a class="tabbar__item {% if active_nav == 'profile' %}is-active{% endif %}" href="{% url 'accounts:profile' user.username %}">
+    <svg class="icon" viewBox="0 0 24 24"><use href="#i-user"/></svg><span>You</span></a>
+</nav>

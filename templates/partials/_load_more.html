@@ -1,0 +1,11 @@
+<div class="load-more" data-loadmore
+     data-url="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}&{% else %}?{% endif %}"
+     data-next="{% if page_obj.has_next %}{{ page_obj.next_page_number }}{% endif %}">
+  <div class="load-more__skeleton" data-loadmore-skeleton hidden>
+    {% include 'partials/_skeleton_post.html' %}
+  </div>
+  <button type="button" class="btn btn--quiet" data-loadmore-btn {% if not page_obj.has_next %}hidden{% endif %}>
+    Load older posts
+  </button>
+  <p class="load-more__end" data-loadmore-end {% if page_obj.has_next %}hidden{% endif %}>You're all caught up.</p>
+</div>

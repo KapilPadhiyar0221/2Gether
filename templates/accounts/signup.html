@@ -1,0 +1,6 @@
+{% extends 'accounts/_auth_base.html' %}
+{% block title %}Join &middot; 2gether{% endblock %}
+{% block auth_title %}Make it 2gether{% endblock %}
+{% block auth_sub %}Pick a handle. That's most of the work.{% endblock %}
+{% block auth_cta %}Create account{% endblock %}
+{% block auth_switch %}Already have an account? <a href="{% url 'accounts:login' %}">Sign in</a>{% endblock %}

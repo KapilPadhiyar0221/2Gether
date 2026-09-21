@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Feed &middot; 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--feed">
+  <header class="page__head">
+    <h1>Feed</h1>
+    <p class="page__sub">Posts from the people you follow.</p>
+  </header>
+
+  <div class="card card--composer">
+    {% include 'partials/_composer.html' with variant='inline' %}
+  </div>
+
+  <div class="feed" data-feed data-feed-accepts-new>
+    {% if posts %}
+      {% include 'partials/_feed_page.html' %}
+    {% elif not following_anyone %}
+      <div class="empty empty--lg">
+        <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-users"/></svg>
+        <h3>Your feed fills up as you follow people</h3>
+        <p>Right now it's just you. Explore is where everyone else is posting.</p>
+        <a class="btn btn--primary" href="{% url 'posts:explore' %}">Go to Explore</a>
+      </div>
+    {% else %}
+      <div class="empty empty--lg">
+        <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-spark"/></svg>
+        <h3>Quiet in here</h3>
+        <p>Nobody you follow has posted yet. Be the one who starts it.</p>
+        <button type="button" class="btn btn--primary" data-open-composer>Write a post</button>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if posts %}{% include 'partials/_load_more.html' %}{% endif %}
+</div>
+{% endblock %}
+
+{% block rail %}
+  {% include 'partials/_rail_suggestions.html' %}
+  <section class="rail-card rail-card--stats">
+    <h2 class="rail-card__title">Your 2gether</h2>
+    <dl class="stats stats--rail">
+      <div><dt>Posts</dt><dd>{{ user.profile.post_count }}</dd></div>
+      <div><dt>Followers</dt><dd>{{ user.profile.follower_count }}</dd></div>
+      <div><dt>Following</dt><dd>{{ user.profile.following_count }}</dd></div>
+    </dl>
+  </section>
+{% endblock %}

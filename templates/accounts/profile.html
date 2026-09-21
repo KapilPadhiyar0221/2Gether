@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile.name }} (&#64;{{ person.username }}) &middot; 2gether{% endblock %}
+
+{% block content %}
+<div class="page page--profile">
+  <header class="profile-head">
+    <div class="profile-head__band" aria-hidden="true"></div>
+    <div class="profile-head__row">
+      <div class="profile-head__avatar">
+        {% include 'partials/_avatar.html' with profile=profile size='xl' %}
+      </div>
+      <div class="profile-head__actions">
+        {% if is_self %}
+          <a class="btn btn--outline btn--sm" href="{% url 'accounts:edit_profile' %}">Edit profile</a>
+        {% else %}
+          {% include 'partials/_follow_button.html' with target=person %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="profile-head__id">
+      <h1>{{ profile.name }}</h1>
+      <p class="handle">&#64;{{ person.username }}</p>
+      {% if profile.bio %}<p class="profile-head__bio">{{ profile.bio }}</p>{% endif %}
+      <ul class="profile-head__facts">
+        {% if profile.location %}<li><svg class="icon" viewBox="0 0 24 24"><use href="#i-pin"/></svg>{{ profile.location }}</li>{% endif %}
+        {% if profile.website %}<li><svg class="icon" viewBox="0 0 24 24"><use href="#i-link"/></svg><a href="{{ profile.website }}" rel="nofollow noopener" target="_blank">{{ profile.website|cut:"https://"|cut:"http://"|truncatechars:34 }}</a></li>{% endif %}
+        <li><svg class="icon" viewBox="0 0 24 24"><use href="#i-spark"/></svg>Joined {{ profile.joined_at|date:"F Y" }}</li>
+      </ul>
+    </div>
+
+    <dl class="stats">
+      <div><dt>Posts</dt><dd data-stat="posts">{{ profile.post_count }}</dd></div>
+      <div><dt><a href="{% url 'accounts:followers' person.username %}">Followers</a></dt>
+           <dd data-stat="followers" data-username="{{ person.username }}">{{ profile.follower_count }}</dd></div>
+      <div><dt><a href="{% url 'accounts:following' person.username %}">Following</a></dt>
+           <dd data-stat="following">{{ profile.following_count }}</dd></div>
+    </dl>
+  </header>
+
+  <div class="feed" data-feed {% if is_self %}data-feed-accepts-new{% endif %}>
+    {% if posts %}
+      {% include 'partials/_feed_page.html' %}
+    {% elif is_self %}
+      <div class="empty empty--lg">
+        <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-image"/></svg>
+        <h3>Nothing posted yet</h3>
+        <p>Your first post shows up here and in your followers' feeds.</p>
+        <button type="button" class="btn btn--primary" data-open-composer>Write a post</button>
+      </div>
+    {% else %}
+      <div class="empty empty--lg">
+        <svg class="empty__icon" viewBox="0 0 24 24"><use href="#i-image"/></svg>
+        <h3>&#64;{{ person.username }} hasn't posted</h3>
+        <p>Follow them and you'll see it in your feed when they do.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if posts %}{% include 'partials/_load_more.html' %}{% endif %}
+</div>
+{% endblock %}
+
+{% block rail %}
+  <section class="rail-card">
+    <h2 class="rail-card__title">{{ profile.name }}</h2>
+    <p class="rail-card__blank">{{ profile.bio|default:"No bio yet." }}</p>
+    <a class="rail-card__more" href="{% url 'accounts:followers' person.username %}">See followers</a>
+  </section>
+{% endblock %}

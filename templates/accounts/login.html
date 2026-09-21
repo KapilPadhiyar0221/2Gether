@@ -1,0 +1,6 @@
+{% extends 'accounts/_auth_base.html' %}
+{% block title %}Sign in &middot; 2gether{% endblock %}
+{% block auth_title %}Welcome back{% endblock %}
+{% block auth_sub %}Sign in to pick up where your people left off.{% endblock %}
+{% block auth_cta %}Sign in{% endblock %}
+{% block auth_switch %}New here? <a href="{% url 'accounts:signup' %}">Create an account</a>{% endblock %}
