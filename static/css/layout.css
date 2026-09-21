@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Shell: left rail · feed · right rail. Collapses by dropping columns, not by
+   shrinking them — the feed keeps its measure at every width.
+   ========================================================================== */
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--rail-left) minmax(0, 1fr) var(--rail-right);
+  gap: var(--s-8);
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  align-items: start;
+}
+
+.shell__main { min-width: 0; padding-block: var(--s-8) var(--s-20); }
+.shell__rail { padding-block: var(--s-8); position: sticky; top: var(--s-6); }
+.shell__rail:empty { display: none; }
+
+.page { max-width: var(--feed-max); }
+.page--feed, .page--profile, .page--detail { margin-inline: auto; }
+
+.page__head { margin-bottom: var(--s-6); }
+.page__head h1 { font-size: var(--t-h1); font-weight: 800; }
+.page__sub { color: var(--ink-3); font-size: var(--t-body-sm); margin-top: var(--s-1); }
+.page__head--back { display: flex; align-items: center; gap: var(--s-3); }
+.page__head--split { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s-4); }
+
+.feed { display: flex; flex-direction: column; gap: var(--s-5); }
+
+.bare { min-height: 100svh; }
+
+/* ---- Left rail ---------------------------------------------------------- */
+.sidebar { position: sticky; top: 0; height: 100svh; padding-block: var(--s-6); }
+.sidebar__inner {
+  display: flex; flex-direction: column; gap: var(--s-5);
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.sidebar__foot { margin-top: auto; display: grid; gap: var(--s-3); }
+.sidebar__tools { display: flex; gap: var(--s-1); }
+
+.nav { list-style: none; padding: 0; display: grid; gap: 2px; }
+
+.nav__item {
+  position: relative;
+  display: flex; align-items: center; gap: var(--s-3);
+  padding: var(--s-3) var(--s-3);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  font-size: var(--t-body-sm);
+  font-weight: 500;
+  transition: background var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+.nav__item:hover { background: var(--surface-2); color: var(--ink); }
+.nav__item.is-active { color: var(--ink); font-weight: 600; }
+/* The active marker is the brand motif: a small overlap on the rail edge. */
+.nav__item.is-active::before {
+  content: "";
+  position: absolute; left: calc(var(--s-3) * -1 - 3px); top: 50%;
+  width: 3px; height: 20px; border-radius: var(--r-pill);
+  background: var(--pine);
+  transform: translateY(-50%) scaleY(0);
+  animation: markIn var(--dur-normal) var(--ease-lift) forwards;
+}
+@keyframes markIn { to { transform: translateY(-50%) scaleY(1); } }
+.nav__item.is-active .icon { stroke-width: 1.9; color: var(--pine); }
+
+.who {
+  display: flex; align-items: center; gap: var(--s-3);
+  padding: var(--s-2); border-radius: var(--r-sm);
+  transition: background var(--dur-micro) var(--ease-out);
+  min-width: 0;
+}
+.who:hover { background: var(--surface-2); }
+.who__text { display: grid; min-width: 0; }
+.who__text strong { font-size: var(--t-body-sm); font-weight: 600; }
+.who__text small, .who__text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who__text small { color: var(--ink-3); font-size: var(--t-meta); }
+
+/* ---- Right rail --------------------------------------------------------- */
+.rail-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-1);
+}
+.rail-card + .rail-card { margin-top: var(--s-4); }
+.rail-card__title { font-size: var(--t-h3); font-weight: 600; margin-bottom: var(--s-4); }
+.rail-card__blank { color: var(--ink-3); font-size: var(--t-body-sm); }
+.rail-card__more {
+  display: inline-block; margin-top: var(--s-4);
+  color: var(--pine); font-size: var(--t-body-sm); font-weight: 500;
+}
+.rail-card__more:hover { text-decoration: underline; text-underline-offset: .2em; }
+
+.rail-people { display: grid; gap: var(--s-4); }
+.rail-person { display: flex; align-items: center; gap: var(--s-3); }
+.rail-person__link { display: flex; align-items: center; gap: var(--s-3); min-width: 0; flex: 1; }
+.rail-person__link span { display: grid; min-width: 0; }
+.rail-person strong { font-size: var(--t-body-sm); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rail-person small { color: var(--ink-3); font-size: var(--t-meta); }
+
+.tips { list-style: none; padding: 0; display: grid; gap: var(--s-3); color: var(--ink-2); font-size: var(--t-body-sm); }
+
+/* ---- Top bar + tab bar (mobile only) ------------------------------------ */
+.topbar, .tabbar { display: none; }
+
+/* ==========================================================================
+   Responsive. Three columns → two → one, then a purpose-built mobile shell.
+   ========================================================================== */
+
+/* 1280 and below: right rail narrows before it goes */
+@media (max-width: 1180px) {
+  :root { --rail-right: 268px; --gutter: var(--s-5); }
+  .shell { gap: var(--s-6); }
+}
+
+/* 1024 and below: drop the right rail. Its content moves into the feed where
+   it matters (suggestions) or disappears (stats you can see on your profile). */
+@media (max-width: 1024px) {
+  .shell { grid-template-columns: var(--rail-left) minmax(0, 1fr); }
+  .shell__rail { display: none; }
+  .page { max-width: 640px; }
+}
+
+/* 840 and below: the rail becomes an icon strip, labels go */
+@media (max-width: 840px) and (min-width: 721px) {
+  :root { --rail-left: 68px; }
+  .wordmark__text { display: none; }
+  .nav__item { justify-content: center; padding-inline: 0; }
+  .nav__item span:not(.badge) { display: none; }
+  .nav__item.is-active::before { left: -10px; }
+  .badge { position: absolute; top: 4px; right: 12px; }
+  .btn--block .btn__label, .sidebar .btn--primary span:not(.spinner) { display: none; }
+  .sidebar .btn--primary { padding-inline: 0; }
+  .who__text { display: none; }
+  .sidebar__tools { flex-direction: column; align-items: center; }
+  .who { justify-content: center; }
+}
+
+/* 720 and below: mobile. A top bar for identity, a tab bar for travel. */
+@media (max-width: 720px) {
+  .sidebar { display: none; }
+
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 0;
+    gap: 0;
+  }
+  .shell__main {
+    padding: calc(var(--topbar-h) + var(--s-4)) var(--s-4)
+             calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--s-12));
+  }
+  .page { max-width: none; }
+
+  .topbar {
+    position: fixed; inset: 0 0 auto 0; z-index: 60;
+    display: flex; align-items: center; justify-content: space-between;
+    height: calc(var(--topbar-h) + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) var(--s-4) 0;
+    background: color-mix(in oklab, var(--paper) 82%, transparent);
+    backdrop-filter: saturate(1.4) blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-normal) var(--ease-out),
+                transform var(--dur-normal) var(--ease-out);
+  }
+  .topbar.is-stuck { border-bottom-color: var(--line); }
+  /* The bar steps aside when you scroll down, returns the moment you scroll up. */
+  .topbar.is-hidden { transform: translateY(-100%); }
+  .topbar__actions { display: flex; align-items: center; gap: var(--s-1); }
+
+  .tabbar {
+    position: fixed; inset: auto 0 0 0; z-index: 60;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    height: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: color-mix(in oklab, var(--paper) 86%, transparent);
+    backdrop-filter: saturate(1.4) blur(14px);
+    border-top: 1px solid var(--line);
+  }
+  .tabbar__item {
+    display: grid; justify-items: center; gap: 3px;
+    color: var(--ink-3);
+    font-size: var(--t-micro);
+    font-weight: 500;
+    min-height: 48px;
+    align-content: center;
+    transition: color var(--dur-micro) var(--ease-out);
+  }
+  .tabbar__item .icon { width: 23px; height: 23px; }
+  .tabbar__item.is-active { color: var(--pine); }
+  .tabbar__item.is-active .icon { stroke-width: 2; }
+  .tabbar__item:active .icon { transform: scale(.9); }
+
+  .tabbar__compose {
+    justify-self: center;
+    width: 46px; height: 46px;
+    display: grid; place-items: center;
+    background: var(--pine); color: #fff;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-3);
+    transition: transform var(--dur-micro) var(--ease-lift);
+  }
+  .tabbar__compose:active { transform: scale(.92); }
+  .tabbar__compose .icon { stroke-width: 2.1; }
+}
+
+@media (max-width: 400px) {
+  .shell__main { padding-inline: var(--s-3); }
+}
